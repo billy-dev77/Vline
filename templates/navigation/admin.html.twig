@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page admin{% endblock %}
+
+{% block body %}
+    <h1>Ma page admin</h1>
+    <h2>{{ app.user.username }} tu es un admin</h2>
+
+    <p>
+        Page ADMINISTRATEUR...
+    </p>
+    <a class="btn btn-primary mt-3" href="{{ path('utilisateur_edit', {'id': app.user.id}) }}">Modifier mon compte</a>
+    <a class="btn btn-info mt-3" href="{{ path('utilisateur_index') }}">Voir la liste des utilisateurs inscrit</a>
+{% endblock %}

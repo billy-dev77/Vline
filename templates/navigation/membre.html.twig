@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello NavigationController!{% endblock %}
+
+{% block body %}
+    <h1>Espace membre</h1>
+
+    <h2>{{ app.user.username }} voici ton espace personnel</h2>
+
+    <p>Ici des choses... </p>
+
+    <a class="btn btn-primary" href="{{ path('utilisateur_edit', {'id': app.user.id}) }}">Modifier mon compte</a>
+{% endblock %}

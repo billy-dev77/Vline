@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomepageController!{% endblock %}
+
+{% block body %}
+    <form action="{{ path('upload') }}" method="post" enctype="multipart/form-data">
+
+        <input type="hidden" name="token" value="{{ csrf_token('upload') }}" />
+
+        <div>
+            <label for="myfile1">Choisissez un premier fichier:</label>
+            <input type="file" name="myfile1" id="myfile1">
+        </div>
+        <div>
+            <label for="myfile2">Choisissez un premier fichier:</label>
+            <input type="file" name="myfile2" id="myfile2">
+        </div>
+
+        <button type="submit">Send</button>
+
+    </form>
+{% endblock %}
