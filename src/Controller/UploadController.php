@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\FileUploader;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,19 +13,6 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/gestionnaire')]
 class UploadController extends AbstractController
 {
-
-    public function role(Request $request): Response
-    {
-        $roles=$this->getUser()->getRoles();
-        $nom=$this->getUser()->getUserIdentifier();
-        if ($roles[0] == 'gestionnaire'){
-            return $this->render('homepage/index.html.twig');
-        }
-        else{
-            $this->render('utilisateur/index.html.twig');
-        }
-    }
-
     #[Route('/file', name: 'file')]
     public function index(): Response
     {
@@ -59,7 +47,48 @@ class UploadController extends AbstractController
         $uploader->upload1($uploadDir, $file1, $filename1);
         $uploader->upload2($uploadDir, $file2, $filename2);
 
+
         return new Response("File uploaded",  Response::HTTP_OK,
             ['content-type' => 'text/plain']);
+    }
+    #[Route('/fusion', name: 'fusion')]
+    public function fusion(Request $request, $uploadDir, FileUploader $uploader, LoggerInterface $logger): Response
+    {
+        $handle1 = fopen("../var/uploads/small-french-data.csv", "r");
+        $handle2 = fopen("../var/uploads/small-german-data.csv", "r");
+        $fusion ="../public/uploads/test1.csv";
+        $fp = fopen($fusion, 'wb');
+        $liste = array();
+        if ($handle1){
+            $ligne1 = fgetcsv($handle1, 12, ",");
+            if ($handle2){
+                $ligne2= fgetcsv($handle2, 12, ",");
+                while($ligne1){
+                    $liste[] = $ligne1;
+                    $ligne1 = fgetcsv($handle1, 12, ",");
+                }
+
+                while($ligne2){
+                    $liste[] = $ligne2;
+                    $ligne2 = fgetcsv($handle2, 12, ",");
+                }
+                fclose($handle1);
+                fclose($handle2);
+            }
+            else{
+                echo "Ouverture fichier 2 impossible";
+            }
+        }
+        else{
+            echo "Ouverture fichier 1 impossible";
+        }
+
+        foreach ($liste as $fields) {
+            fputcsv($fp, $fields);
+
+        }
+        fclose($fp);
+        dump($liste);
+        exit();
     }
 }
