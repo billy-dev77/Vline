@@ -48,15 +48,14 @@ class UploadController extends AbstractController
         $uploader->upload2($uploadDir, $file2, $filename2);
 
 
-        return new Response("File uploaded",  Response::HTTP_OK,
-            ['content-type' => 'text/plain']);
+        return $this->redirectToRoute('fusion');
     }
     #[Route('/fusion', name: 'fusion')]
     public function fusion(Request $request, $uploadDir, FileUploader $uploader, LoggerInterface $logger): Response
     {
         $handle1 = fopen("../var/uploads/small-french-data.csv", "r");
         $handle2 = fopen("../var/uploads/small-german-data.csv", "r");
-        $fusion ="../public/uploads/test1.csv";
+        $fusion ="./uploads/test1.csv";
         $fp = fopen($fusion, 'wb');
         $liste = array();
         if ($handle1){
@@ -88,7 +87,8 @@ class UploadController extends AbstractController
 
         }
         fclose($fp);
-        dump($liste);
-        exit();
+        return $this->render('/upload/index.html.twig', array(
+            'merge' => $fusion
+        ));
     }
 }
